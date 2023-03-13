@@ -8,40 +8,7 @@
   <body>
     <div class="container">
       <ul id="list" class="comments">
-        <li class="comment">
-          <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>
+        <!-- render -->
       </ul>
       <div class="add-form">
         <input
@@ -72,6 +39,141 @@
     const textInputElement = document.getElementById("textEl");
     const listElement = document.getElementById("list");
     const delButtonElement = document.getElementById("del-btn");
+
+
+
+    const comments = [
+      {
+        name: "Глеб Фокин",
+        time: "12.02.22 12:18",
+        comm: "Это будет первый комментарий на этой странице",
+        like : 3,
+        userLike: false,
+        color: "like-button",
+        isEdit: false,
+      },
+      {
+        name: "Варвара Н.",
+        time: "13.02.22 19:22",
+        comm: "Мне нравится как оформлена эта страница! ❤",
+        like: 75,
+        userLike: false,
+        color: "like-button",
+        isEdit: false,
+      },
+    ];
+
+
+
+    const rendercomments = () => {
+      const commentsHtml  = comments.map((comment, index) => {
+        if (comment.isEdit === false) {
+        return ` <li class="comment" >
+        <div class="comment-header">
+            <div>${comment.name}</div>
+            <div>${comment.time}</div>
+          </div>
+          <div class="comment-body">
+            <div id="com-txt-el" class="comment-text" >
+              ${comment.comm}
+            </div>
+          </div>
+          <div class="comment-footer">
+
+            <button id="ed-btn-el" class="edit-button" data-index="${index}">Редактировать</button>
+            <div class="likes">
+              <span class="likes-counter">${comment.like}</span>
+              <button class="${comment.color}" data-index="${index}"></button>
+            </div>
+          </div>
+      </li>`;} else {
+        return ` <li class="comment">
+        <div class="comment-header">
+            <div>${comment.name}</div>
+            <div>${comment.time}</div>
+          </div>
+          <div class="comment-body">
+          <div class="area-box">
+            <textarea
+              id="text-edit-El"
+              type="textarea"
+              class= "edit-area"
+              rows="4"
+            >${comment.comm}</textarea>
+          </div>
+          </div>
+          <div class="comment-footer">
+            <button id="sv-btn-el" class="save-button" data-index="${index}">Сохранить</button>
+          </div>
+      </li>`;
+        
+      }
+      }).join("");
+
+
+      listElement.innerHTML = commentsHtml;
+      initEventListeners();
+      editEvent();
+      saveEditEvent();
+
+    }
+
+
+    const editEvent = () => {
+      const editButtonsElements = document.querySelectorAll(".edit-button");
+
+      for (const editButtonElement of editButtonsElements) {
+        const index = editButtonElement.dataset.index;
+        editButtonElement.addEventListener("click", () => {
+          comments[index].isEdit = true;
+          rendercomments();
+        })
+      }
+    }
+
+    const saveEditEvent = () => {
+      const saveEditButtonsElements = document.querySelectorAll(".save-button");
+      const editAreaElements = document.querySelectorAll(".edit-area");
+
+      for ( const saveEditButtonElement of saveEditButtonsElements) {
+        const index = saveEditButtonElement.dataset.index;
+        saveEditButtonElement.addEventListener("click", () => {
+          for(const editAreaElement of editAreaElements) {
+            comments[index].comm = editAreaElement.value;
+          }
+          comments[index].isEdit = false;
+          rendercomments();
+        })
+      }
+    }
+
+
+    const initEventListeners = () => {
+      const likeButtonElements = document.querySelectorAll(".like-button");
+
+      for ( const likeButtonElement of likeButtonElements) {
+        const index = likeButtonElement.dataset.index;
+        likeButtonElement.addEventListener("click", () => {
+          if (comments[index].userLike === false) {
+            comments[index].like += 1;
+            comments[index].color = "like-button -active-like";
+            comments[index].userLike = true;
+            
+          } else {
+            comments[index].like -= 1;
+            comments[index].color = "like-button";
+            comments[index].userLike = false;
+
+          } 
+          rendercomments();
+        })
+      }
+    }
+
+    saveEditEvent();
+    editEvent();
+    rendercomments();
+    initEventListeners();
 
 
     
@@ -130,25 +232,18 @@
         return;
       }
 
-      const oldListHTML = listElement.innerHTML;
-      listElement.innerHTML = oldListHTML +
-      ` <li class="comment">
-        <div class="comment-header">
-            <div>${nameInputElement.value}</div>
-            <div>${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${textInputElement.value}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">0</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-      </li>`
+      comments.push({
+        name: nameInputElement.value,
+        time: `${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}`,
+        comm: textInputElement.value,
+        like: 0,
+        userLike: false,
+        color: "like-button",
+        isEdit: false,
+      })
+
+      rendercomments();
+      initEventListeners();
 
       nameInputElement.value = "";
       textInputElement.value = "";
