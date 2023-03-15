@@ -126,6 +126,7 @@
       editEvent();
       saveEditEvent();
       answerEvent();
+      blockButton();
 
     }
 
@@ -196,17 +197,31 @@
       }
     }
 
+    const validateInput = () => {
+      if (nameInputElement.value !== "" && textInputElement.value !== "") {
+        buttonElement.disabled = false;
+      } else {
+        buttonElement.disabled = true;
+      }
+    }
 
+    const blockButton = () => {
+      
+      document.querySelectorAll("#nameEl, #textEl").forEach((el) => {
+        el.addEventListener("input", () => {
+          validateInput();
+        })
+      })
+    }
+
+    validateInput();
+    blockButton();
     answerEvent();
     saveEditEvent();
     editEvent();
     rendercomments();
     initEventListeners();
-
-
     
-    nameInputElement.addEventListener("input" , () => {buttonElement.disabled =false;});
-    textInputElement.addEventListener("input" , () => {buttonElement.disabled =false;});
 
 
 /*    textInputElement.addEventListener("keyup", (e) => {
