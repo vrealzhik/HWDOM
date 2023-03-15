@@ -17,6 +17,7 @@
           class="add-form-name"
           placeholder="Введите ваше имя"
         />
+        <textarea id="answer-area-form" type="textarea" class="answer-area" rows="3" readonly hidden></textarea>
         <textarea
           id="textEl"
           type="textarea"
@@ -39,6 +40,8 @@
     const textInputElement = document.getElementById("textEl");
     const listElement = document.getElementById("list");
     const delButtonElement = document.getElementById("del-btn");
+    const answerAreaElement = document.getElementById("answer-area-form");
+    let answer = "";
 
 
 
@@ -48,6 +51,7 @@
         time: "12.02.22 12:18",
         comm: "Это будет первый комментарий на этой странице",
         like : 3,
+        ans: answer,
         userLike: false,
         color: "like-button",
         isEdit: false,
@@ -57,6 +61,7 @@
         time: "13.02.22 19:22",
         comm: "Мне нравится как оформлена эта страница! ❤",
         like: 75,
+        ans: answer,
         userLike: false,
         color: "like-button",
         isEdit: false,
@@ -74,8 +79,8 @@
             <div>${comment.time}</div>
           </div>
           <div class="comment-body">
-            <div id="com-txt-el" class="comment-text" >
-              ${comment.comm}
+            <div id="com-txt-el" class="comment-text" data-index ="${index}">
+              ${comment.ans} ${comment.comm}
             </div>
           </div>
           <div class="comment-footer">
@@ -94,6 +99,7 @@
           </div>
           <div class="comment-body">
           <div class="area-box">
+            ${comment.ans}
             <textarea
               id="text-edit-El"
               type="textarea"
@@ -115,7 +121,23 @@
       initEventListeners();
       editEvent();
       saveEditEvent();
+      answerEvent();
 
+    }
+
+
+    const answerEvent = () => {
+      const answerAreaButtonsElements = document.querySelectorAll(".comment-text");
+
+      for (const answerAreaButtonElement of answerAreaButtonsElements) {
+        const index = answerAreaButtonElement.dataset.index;
+        answerAreaButtonElement.addEventListener("click", () => {
+          answerAreaElement.value = `${comments[index].name} \n${comments[index].comm}`;
+          answerAreaElement.hidden = false;
+          answer = `<div class="answerBox">${answerAreaElement.value}</div>`
+          rendercomments();
+        })
+      }
     }
 
 
@@ -139,7 +161,7 @@
         const index = saveEditButtonElement.dataset.index;
         saveEditButtonElement.addEventListener("click", () => {
           for(const editAreaElement of editAreaElements) {
-            comments[index].comm = editAreaElement.value;
+            comments[index].comm = editAreaElement.value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
           }
           comments[index].isEdit = false;
           rendercomments();
@@ -170,6 +192,8 @@
       }
     }
 
+
+    answerEvent();
     saveEditEvent();
     editEvent();
     rendercomments();
@@ -181,17 +205,17 @@
     textInputElement.addEventListener("input" , () => {buttonElement.disabled =false;});
 
 
-    textInputElement.addEventListener("keyup", (e) => {
+/*    textInputElement.addEventListener("keyup", (e) => {
       if(e.code === 'Enter') {
         enter();
       }
     })
 
-    nameInputElement.addEventListener("keyup", (e) => {
+    nameInputElement.addEventListener("keyup", (a,e) => {
       if(e.code === 'Enter') {
         enter();
       }
-    })
+    })*/
 
     buttonElement.addEventListener("click", enter);
 
@@ -233,10 +257,11 @@
       }
 
       comments.push({
-        name: nameInputElement.value,
+        name: nameInputElement.value.replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
         time: `${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}`,
-        comm: textInputElement.value,
+        comm: textInputElement.value.replaceAll("<", "&lt;").replaceAll(">", "&gt;"),
         like: 0,
+        ans: answer,
         userLike: false,
         color: "like-button",
         isEdit: false,
@@ -248,9 +273,13 @@
       nameInputElement.value = "";
       textInputElement.value = "";
       buttonElement.disabled = true;
+      answer = "";
+      answerAreaElement.value = "";
+      answerAreaElement.hidden = true;
+
     }
 
 
-    console.log("It works!");
+    console.log("It works!");  
   </script>
 </html>
