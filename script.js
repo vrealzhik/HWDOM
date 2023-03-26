@@ -36,13 +36,13 @@
               isLiked: false,
              };
           });
-
+          
           comments = appComments;
           rendercomments();
-        });
-
+        })
+        
       
-        });
+      });
 
 
 
@@ -167,20 +167,44 @@
                 isLiked: false,
             })
         }).then(() => {
-          fetch("https://webdev-hw-api.vercel.app/api/v1/vladislav-zhalin/comments", {
-            method: "GET",
-          }).then((responseData) => {
-            comments = responseData.comments;
-            
+          const fetchPromise = fetch("https://webdev-hw-api.vercel.app/api/v1/vladislav-zhalin/comments", {
+            method: "GET" 
           });
-          rendercomments();
-          
+
+          fetchPromise.then((response) => {
+            let userDate = new Date();
+            const locale = 'ru-RU';
+            const dateFormat = {
+              day: 'numeric', 
+              month: 'numeric',
+              year: '2-digit',
+      
+            }
+            const timeFormat = {
+              timezone: 'UTC',
+              hour: 'numeric',
+              minute: '2-digit',
+            }
+              response.json().then((responseData) => {
+                const appComments = responseData.comments.map((comment) => {
+                  return {
+                    name: comment?.author?.name,
+                    date: `${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}`,
+                    text: comment.text,
+                    likes: comment.likes,
+                    isLiked: false,
+                   };
+                });
+                
+                comments = appComments;
+                rendercomments();
+              })
+            });           
+          });
           nameInputElement.value = "";
           textInputElement.value = "";
-        })
-          
-
-        });
+      });
+        
 
 
 /*    buttonElement.addEventListener("click", enter);
