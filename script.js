@@ -158,14 +158,7 @@
               isLiked: false,
           })
       })
-      .then(() => {
-        fetch("https://webdev-hw-api.vercel.app/api/v1/vladislav-zhalin/comments", {
-          method: "GET" 
-        })
-      })
-      .then(() => {
-        return fetchAndRender();
-      })
+      .then(() => fetchAndRender())
       .then(() => {
         textBlockElement.hidden = true;
         buttonElement.hidden = false;
