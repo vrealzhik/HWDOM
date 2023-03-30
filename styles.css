@@ -14,6 +14,11 @@ body {
     min-height: 100vh;
   }
 
+  .all-add {
+    text-align: center;
+    padding: 15px;
+    list-style: none;
+  }
   
   .comments,
   .comment {
@@ -22,8 +27,11 @@ body {
     list-style: none;
   }
 
+
+
   .comment,
-  .add-form {
+  .add-form,
+  .all-add {
     width: 596px;
     box-sizing: border-box;
     background: radial-gradient(
@@ -108,6 +116,10 @@ body {
     margin-top: 48px;
     display: flex;
     flex-direction: column;
+  }
+
+  .text-add-comm {
+    text-align: center;
   }
 
   .add-form-name,

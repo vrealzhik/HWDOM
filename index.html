@@ -11,11 +11,15 @@
 
   <body>
     <div class="container">
+      <li hidden id="start-loader" class="all-add">
+        Пожалуйста подождите, комментарии загружаются...
+      </li>
       <ul id="list" class="comments">
         <!-- render -->
       </ul>
       <div class="add-form">
-        <input
+        <p hidden id="block-text" class="text-add-comm">Комментарий добаляется...</p>
+        <input 
           id="nameEl"
           type="text"
           class="add-form-name"
