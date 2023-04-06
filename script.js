@@ -124,8 +124,8 @@
       loaderElement.hidden = true;
     });
 
+    const handlePostClick = () => {
 
-    buttonElement.addEventListener("click", () => {
       let userDate = new Date();
       const locale = 'ru-RU';
       const dateFormat = {
@@ -147,18 +147,28 @@
       textInputElement.hidden = true;
 
 
-
       fetch("https://webdev-hw-api.vercel.app/api/v1/vladislav-zhalin/comments", {
-          method: "POST",
-          body: JSON.stringify({
-              text: textInputElement.value,
-              name: nameInputElement.value,
-              date: `${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}`,
-              likes: 0,
-              isLiked: false,
-          })
+        method: "POST",
+        body: JSON.stringify({
+            text: textInputElement.value,
+            name: nameInputElement.value,
+            date: `${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}`,
+            likes: 0,
+            isLiked: false,
+            forceError: true,
+        })
       })
-      .then(() => fetchAndRender())
+      .then((response) => {
+        if(response.status === 500) {
+          //throw new Error("Сервер упал");
+          return Promise.reject("Сервер упал")
+        } else if(response.status === 400) {
+          //throw new Error("Неправильный ввод");
+          return Promise.reject("Неправильный ввод");
+        } else {
+          fetchAndRender();
+        }
+      })
       .then(() => {
         textBlockElement.hidden = true;
         buttonElement.hidden = false;
@@ -167,4 +177,21 @@
         nameInputElement.value = "";
         textInputElement.value = "";
       })
-    });
+      .catch((error) =>{
+        textBlockElement.hidden = true;
+        buttonElement.hidden = false;
+        nameInputElement.hidden = false;
+        textInputElement.hidden = false;
+        console.log(error);
+        if(error === "Сервер упал") {
+          handlePostClick();
+        } else if(error === "Неправильный ввод") {
+          alert("Имя и комментарий должны быть не короче 3 символов")
+        } else {
+          alert("Кажется, у вас сломался интернет, попробуйте позже");
+        }
+      })
+    }
+
+
+    buttonElement.addEventListener("click", handlePostClick);
