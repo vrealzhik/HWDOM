@@ -10,36 +10,8 @@
   </head>
 
   <body>
-    <div class="container">
-      <li hidden id="start-loader" class="all-add">
-        Пожалуйста подождите, комментарии загружаются...
-      </li>
-      <ul id="list" class="comments">
-        <!-- render -->
-      </ul>
-      <div class="add-form">
-        <p hidden id="block-text" class="text-add-comm">Комментарий добаляется...</p>
-        <input 
-          id="nameEl"
-          type="text"
-          class="add-form-name"
-          placeholder="Введите ваше имя"
-        />
-        <textarea id="answer-area-form" type="textarea" class="answer-area" rows="3" readonly hidden></textarea>
-        <textarea
-          id="textEl"
-          type="textarea"
-          class="add-form-text"
-          placeholder="Введите ваш коментарий"
-          rows="4"
-        ></textarea>
-        <div class="add-form-row">
-          <button id="write-btn" class="add-form-button" disabled>Написать</button>
-        </div>
-      </div>
-    </div>
+    <div id="app"></div>
   </body>
 
   <script type="module" src="script.js"></script>
-  <script type="module" src="api.js" ></script>
 </html>
