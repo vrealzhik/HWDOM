@@ -7,12 +7,16 @@ let comments = [];
 const fetchAndRender = () => {
 return getcomment()
 .then((responseData) => {
-  const createDate = format(new Date(), 'yyyy-MM-dd hh.mm.ss')
+  const formatDate = (date) => {
+    const createDate = format(new Date(date), 'yyyy-MM-dd hh.mm.ss')
+    return createDate;
+  }
+  
 
   const appComments = responseData.comments.map((comment) => {
     return {
       name: comment?.author?.name,
-      date: `${createDate}`,
+      date: `${formatDate(comment.date)}`,
       text: comment.text,
       likes: comment.likes,
       isLiked: false,
