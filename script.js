@@ -1,27 +1,18 @@
 import { getcomment, postcomment } from "./api.js";
 import { renderLoginComponent } from "./login-component.js";
+import { format } from "date-fns";
 
 let comments = [];
 
 const fetchAndRender = () => {
 return getcomment()
 .then((responseData) => {
-  let userDate = new Date();
-  const locale = 'ru-RU';
-  const dateFormat = {
-    day: 'numeric', 
-    month: 'numeric',
-    year: '2-digit',
-  }
-  const timeFormat = {
-    timezone: 'UTC',
-    hour: 'numeric',
-    minute: '2-digit',
-  }
+  const createDate = format(new Date(), 'yyyy-MM-dd hh.mm.ss')
+
   const appComments = responseData.comments.map((comment) => {
     return {
       name: comment?.author?.name,
-      date: `${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}`,
+      date: `${createDate}`,
       text: comment.text,
       likes: comment.likes,
       isLiked: false,
@@ -133,19 +124,7 @@ const renderApp = () => {
         }
     
         const handlePostClick = () => {
-            let userDate = new Date();
-            const locale = 'ru-RU';
-            const dateFormat = {
-              day: 'numeric', 
-              month: 'numeric',
-              year: '2-digit',
-          
-            }
-            const timeFormat = {
-              timezone: 'UTC',
-              hour: 'numeric',
-              minute: '2-digit',
-            }
+          const createDate = format(new Date(), 'dd/MM/yyyy hh:mm')
           
             textBlockElement.hidden = false;
             buttonElement.hidden = true;
@@ -156,7 +135,7 @@ const renderApp = () => {
                 token,
                 text: textInputElement.value,
                 name: nameInputElement.value,
-                date: `${userDate.toLocaleDateString(locale, dateFormat)} ${userDate.toLocaleTimeString(locale, timeFormat)}`
+                date: `${createDate}`
             })
             .then((response) => {
               if(response.status === 500) {
