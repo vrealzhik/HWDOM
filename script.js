@@ -12,7 +12,6 @@ return getcomment()
     return createDate;
   }
   
-
   const appComments = responseData.comments.map((comment) => {
     return {
       name: comment?.author?.name,

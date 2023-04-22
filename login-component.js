@@ -81,7 +81,6 @@ export function renderLoginComponent ({ appEl, setToken, nameForForm, fetchAndRe
                 })
             }
         })
-
         document.getElementById('toggleBtn').addEventListener("click", () => {
             isloginMode = !isloginMode;
             renderForm();
